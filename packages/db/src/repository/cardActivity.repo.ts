@@ -33,6 +33,8 @@ export const create = async (
     fromDueDate?: Date;
     toDueDate?: Date;
     sourceBoardId?: number;
+    fromEstimatedTime?: number;
+    toEstimatedTime?: number;
   },
 ) => {
   const [result] = await db
@@ -58,6 +60,8 @@ export const create = async (
       fromDueDate: activityInput.fromDueDate,
       toDueDate: activityInput.toDueDate,
       sourceBoardId: activityInput.sourceBoardId,
+      fromEstimatedTime: activityInput.fromEstimatedTime,
+      toEstimatedTime: activityInput.toEstimatedTime,
     })
     .returning({ id: cardActivities.id });
 
@@ -83,6 +87,8 @@ export const bulkCreate = async (
     fromDueDate?: Date;
     toDueDate?: Date;
     sourceBoardId?: number;
+    fromEstimatedTime?: number;
+    toEstimatedTime?: number;
   }[],
 ) => {
   const activitiesWithPublicIds = activityInputs.map((activity) => ({
@@ -129,6 +135,8 @@ export const getPaginatedActivities = async (
       toDescription: true,
       fromDueDate: true,
       toDueDate: true,
+      fromEstimatedTime: true,
+      toEstimatedTime: true,
     },
     where: and(
       eq(cardActivities.cardId, cardId),

@@ -148,6 +148,20 @@
       "when": 1764621815672,
       "tag": "20251201204335_AddCardDueDates",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1766622788080,
+      "tag": "20251225003308_add_expected_time",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1766624746658,
+      "tag": "20251225010546_add_activity_expected_time",
+      "breakpoints": true
     }
   ]
 }

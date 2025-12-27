@@ -43,6 +43,7 @@ export const create = async (
     listId: number;
     position: "start" | "end";
     dueDate?: Date | null;
+    estimatedTime?: number | null;
   },
 ) => {
   return db.transaction(async (tx) => {
@@ -92,6 +93,7 @@ export const create = async (
         listId: cardInput.listId,
         index: index,
         dueDate: cardInput.dueDate ?? null,
+        estimatedTime: cardInput.estimatedTime ?? null,
       })
       .returning({ id: cards.id, listId: cards.listId });
 
@@ -185,6 +187,7 @@ export const update = async (
     title?: string;
     description?: string;
     dueDate?: Date | null;
+    estimatedTime?: number | null;
   },
   args: {
     cardPublicId: string;
@@ -197,6 +200,7 @@ export const update = async (
       description: cardInput.description,
       dueDate: cardInput.dueDate !== undefined ? cardInput.dueDate : undefined,
       updatedAt: new Date(),
+      estimatedTime: cardInput.estimatedTime,
     })
     .where(and(eq(cards.publicId, args.cardPublicId), isNull(cards.deletedAt)))
     .returning({
@@ -205,6 +209,7 @@ export const update = async (
       title: cards.title,
       description: cards.description,
       dueDate: cards.dueDate,
+      estimatedTime: cards.estimatedTime,
     });
 
   return result;
@@ -240,6 +245,7 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       description: true,
       listId: true,
       dueDate: true,
+      estimatedTime: true,
     },
     where: eq(cards.publicId, cardPublicId),
   });
@@ -267,6 +273,7 @@ export const bulkCreate = async (
     listId: number;
     index: number;
     importId?: number;
+    estimatedTime?: number;
   }[],
 ) => {
   if (cardInput.length === 0) return [];
@@ -288,6 +295,7 @@ export const bulkCreate = async (
       listId: number;
       index: number;
       importId?: number;
+      estimatedTime?: number;
     }[] = [];
 
     // For each list, append incoming cards after current max index, preserving incoming order
@@ -309,6 +317,7 @@ export const bulkCreate = async (
           listId: it.listId,
           index: nextIndex++,
           importId: it.importId,
+          estimatedTime: it.estimatedTime,
         });
       }
     }
@@ -424,6 +433,7 @@ export const getWithListAndMembersByPublicId = async (
       title: true,
       description: true,
       dueDate: true,
+      estimatedTime: true,
     },
     with: {
       labels: {
@@ -560,6 +570,8 @@ export const getWithListAndMembersByPublicId = async (
           toDescription: true,
           fromDueDate: true,
           toDueDate: true,
+          fromEstimatedTime: true,
+          toEstimatedTime: true,
         },
         with: {
           fromList: {
@@ -810,6 +822,7 @@ export const reorder = async (
         title: true,
         description: true,
         dueDate: true,
+        estimatedTime: true,
       },
       where: eq(cards.id, card.id),
     });

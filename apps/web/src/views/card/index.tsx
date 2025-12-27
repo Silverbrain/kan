@@ -39,6 +39,7 @@ interface FormValues {
   cardId: string;
   title: string;
   description: string;
+  estimatedTime?: number;
 }
 
 export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
@@ -213,6 +214,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
       cardId: cardId ?? "",
       title: card?.title ?? "",
       description: card?.description ?? "",
+      estimatedTime: card?.estimatedTime ?? undefined,
     },
   });
 
@@ -221,6 +223,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
       cardPublicId: values.cardId,
       title: values.title,
       description: values.description,
+      estimatedTime: card?.estimatedTime ?? undefined,
     });
   };
 

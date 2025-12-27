@@ -34,6 +34,7 @@ export const cardRouter = createTRPCRouter({
         memberPublicIds: z.array(z.string().min(12)),
         position: z.enum(["start", "end"]),
         dueDate: z.date().nullable().optional(),
+        estimatedTime: z.number().nullable().optional(),
       }),
     )
     .output(z.custom<Awaited<ReturnType<typeof cardRepo.create>>>())
@@ -72,6 +73,7 @@ export const cardRouter = createTRPCRouter({
         listId: list.id,
         position: input.position,
         dueDate: input.dueDate ?? null,
+        estimatedTime: input.estimatedTime ?? null,
       });
 
       const newCardId = newCard.id;
@@ -765,6 +767,7 @@ export const cardRouter = createTRPCRouter({
         index: z.number().optional(),
         listPublicId: z.string().min(12).optional(),
         dueDate: z.date().nullable().optional(),
+        estimatedTime: z.number().nullable().optional(),
       }),
     )
     .output(z.custom<Awaited<ReturnType<typeof cardRepo.update>>>())
@@ -826,10 +829,12 @@ export const cardRouter = createTRPCRouter({
             description: string | null;
             publicId: string;
             dueDate: Date | null;
+            estimatedTime: number | null;
           }
         | undefined;
 
       const previousDueDate = existingCard.dueDate;
+      const previousEstimatedTime = existingCard.estimatedTime;
 
       if (input.title || input.description || input.dueDate !== undefined) {
         result = await cardRepo.update(
@@ -902,6 +907,33 @@ export const cardRouter = createTRPCRouter({
           createdBy: userId,
           fromDueDate: previousDueDate ?? undefined,
           toDueDate: input.dueDate ?? undefined,
+        });
+      }
+
+      // estimatedTime added or updated
+      if (
+        input.estimatedTime !== undefined &&
+        previousEstimatedTime !== input.estimatedTime
+      ) {
+        let activityType:
+          | "card.updated.estimatedTime.added"
+          | "card.updated.estimatedTime.updated"
+          | "card.updated.estimatedTime.removed";
+
+        if (!previousEstimatedTime) {
+          activityType = "card.updated.estimatedTime.added";
+        } else if (!input.estimatedTime) {
+          activityType = "card.updated.estimatedTime.removed";
+        } else {
+          activityType = "card.updated.estimatedTime.updated";
+        }
+
+        activities.push({
+          type: activityType,
+          cardId: result.id,
+          createdBy: userId,
+          fromEstimatedTime: previousEstimatedTime ?? undefined,
+          toEstimatedTime: input.estimatedTime ?? undefined,
         });
       }
 
