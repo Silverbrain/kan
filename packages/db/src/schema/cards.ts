@@ -157,6 +157,8 @@ export const cardActivities = pgTable("card_activity", {
     () => cardAttachments.id,
     { onDelete: "cascade" },
   ),
+  fromEstimatedTime: integer("fromEstimatedTime").default(0),
+  toEstimatedTime: integer("toEstimatedTime").default(0),
 }).enableRLS();
 
 export const cardActivitiesRelations = relations(cardActivities, ({ one }) => ({

@@ -36,6 +36,8 @@ export const create = async (
     fromEstimatedTime?: number;
     toEstimatedTime?: number;
     attachmentId?: number;
+    fromEstimatedTime?: number;
+    toEstimatedTime?: number;
   },
 ) => {
   const [result] = await db
@@ -64,6 +66,8 @@ export const create = async (
       fromEstimatedTime: activityInput.fromEstimatedTime,
       toEstimatedTime: activityInput.toEstimatedTime,
       attachmentId: activityInput.attachmentId,
+      fromEstimatedTime: activityInput.fromEstimatedTime,
+      toEstimatedTime: activityInput.toEstimatedTime,
     })
     .returning({ id: cardActivities.id });
 
@@ -92,6 +96,8 @@ export const bulkCreate = async (
     fromEstimatedTime?: number;
     toEstimatedTime?: number;
     attachmentId?: number;
+    fromEstimatedTime?: number;
+    toEstimatedTime?: number;
   }[],
 ) => {
   const activitiesWithPublicIds = activityInputs.map((activity) => ({

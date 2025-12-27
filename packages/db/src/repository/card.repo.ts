@@ -436,6 +436,7 @@ export const getWithListAndMembersByPublicId = async (
       dueDate: true,
       estimatedTime: true,
       createdBy: true,
+      estimatedTime: true,
     },
     with: {
       labels: {
