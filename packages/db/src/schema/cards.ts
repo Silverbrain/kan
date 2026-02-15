@@ -153,6 +153,10 @@ export const cardActivities = pgTable("card_activity", {
   ),
   fromEstimatedTime: integer("fromEstimatedTime").default(0),
   toEstimatedTime: integer("toEstimatedTime").default(0),
+  attachmentId: bigint("attachmentId", { mode: "number" }).references(
+    () => cardAttachments.id,
+    { onDelete: "cascade" },
+  ),
 }).enableRLS();
 
 export const cardActivitiesRelations = relations(cardActivities, ({ one }) => ({
@@ -195,6 +199,11 @@ export const cardActivitiesRelations = relations(cardActivities, ({ one }) => ({
     fields: [cardActivities.commentId],
     references: [comments.id],
     relationName: "cardActivitiesComment",
+  }),
+  attachment: one(cardAttachments, {
+    fields: [cardActivities.attachmentId],
+    references: [cardAttachments.id],
+    relationName: "cardActivitiesAttachment",
   }),
 }));
 

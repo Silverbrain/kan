@@ -35,6 +35,7 @@ export const create = async (
     sourceBoardId?: number;
     fromEstimatedTime?: number;
     toEstimatedTime?: number;
+    attachmentId?: number;
   },
 ) => {
   const [result] = await db
@@ -62,6 +63,7 @@ export const create = async (
       sourceBoardId: activityInput.sourceBoardId,
       fromEstimatedTime: activityInput.fromEstimatedTime,
       toEstimatedTime: activityInput.toEstimatedTime,
+      attachmentId: activityInput.attachmentId,
     })
     .returning({ id: cardActivities.id });
 
@@ -89,6 +91,7 @@ export const bulkCreate = async (
     sourceBoardId?: number;
     fromEstimatedTime?: number;
     toEstimatedTime?: number;
+    attachmentId?: number;
   }[],
 ) => {
   const activitiesWithPublicIds = activityInputs.map((activity) => ({
@@ -197,6 +200,13 @@ export const getPaginatedActivities = async (
           createdBy: true,
           updatedAt: true,
           deletedAt: true,
+        },
+      },
+      attachment: {
+        columns: {
+          publicId: true,
+          filename: true,
+          originalFilename: true,
         },
       },
     },
